@@ -1,26 +1,179 @@
+openapi: 3.0.0
+info:
+  title: RPG Manager API
+  version: 1.0.0
+  description: API para gerenciamento de personagens e itens mágicos em um jogo de RPG.
+
+servers:
+  - url: http://localhost:3000
+
 paths:
   /personagens:
     post:
-      summary: Cria um novo personagem
-      description: |
-        - A soma de Força + Defesa deve ser no máximo 10 pontos.
-        - O personagem só pode ter **1** item do tipo **Amuleto**.
-        - Classe deve ser: Guerreiro, Mago, Arqueiro, Ladino ou Bardo.
+      summary: Cadastrar Personagem
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PersonagemInput'
+              $ref: '#/components/schemas/Personagem'
       responses:
-        '201':
+        201:
           description: Personagem criado com sucesso
-        '400':
-          description: Requisição inválida - regras não respeitadas
+
+    get:
+      summary: Listar todos os personagens
+      responses:
+        200:
+          description: Lista de personagens
+
+  /personagens/{id}:
+    get:
+      summary: Buscar personagem por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Personagem encontrado
+
+    delete:
+      summary: Remover personagem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Personagem removido
+
+  /personagens/{id}/nome:
+    patch:
+      summary: Atualizar nome do Guerreiro
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+      responses:
+        200:
+          description: Nome atualizado
+
+  /itens-magicos:
+    post:
+      summary: Cadastrar Item Mágico
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemMagico'
+      responses:
+        201:
+          description: Item criado com sucesso
+
+    get:
+      summary: Listar todos os itens mágicos
+      responses:
+        200:
+          description: Lista de itens
+
+  /itens-magicos/{id}:
+    get:
+      summary: Buscar item mágico por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Item encontrado
+
+  /personagens/{id}/itens:
+    post:
+      summary: Adicionar item mágico ao personagem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                itemId:
+                  type: integer
+      responses:
+        200:
+          description: Item adicionado ao personagem
+
+    get:
+      summary: Listar itens mágicos por personagem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Lista de itens do personagem
+
+  /personagens/{id}/itens/{itemId}:
+    delete:
+      summary: Remover item mágico do personagem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: itemId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Item removido do personagem
+
+  /personagens/{id}/amuleto:
+    get:
+      summary: Buscar amuleto do personagem
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Amuleto do personagem (se existir)
 
 components:
   schemas:
-    PersonagemInput:
+    Personagem:
       type: object
       required:
         - nome
@@ -41,29 +194,27 @@ components:
           type: integer
         forca:
           type: integer
-          description: Soma com a defesa não pode ultrapassar 10
         defesa:
           type: integer
-          description: Soma com a força não pode ultrapassar 10
         itensMagicos:
           type: array
           items:
-            $ref: '#/components/schemas/ItemMagicoInput'
+            $ref: '#/components/schemas/ItemMagico'
 
-    ItemMagicoInput:
+    ItemMagico:
       type: object
       required:
         - nome
         - tipo
-        - bonusForca
-        - bonusDefesa
+        - forca
+        - defesa
       properties:
         nome:
           type: string
         tipo:
           type: string
-          enum: [Arma, Amuleto, Armadura, Anel]
-        bonusForca:
+          enum: [Arma, Armadura, Amuleto]
+        forca:
           type: integer
-        bonusDefesa:
+        defesa:
           type: integer
