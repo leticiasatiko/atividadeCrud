@@ -25,13 +25,6 @@ class Personagem {
   
       return { forca: totalForca, defesa: totalDefesa };
     }
-  
-    adicionarItem(item) {
-      if (item.tipo === "Amuleto" && this.itensMagicos.some(i => i.tipo === "Amuleto")) {
-        throw new Error("Só pode ter um amuleto.");
-      }
-      this.itensMagicos.push(item);
-    }
   }
   
   module.exports = Personagem;
