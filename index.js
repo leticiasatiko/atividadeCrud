@@ -1,12 +1,13 @@
-import express from 'express';
-import personagemRoutes from './routes/routes_personagem.js';
-
+const express = require('express');
 const app = express();
-const PORT = 5000;
+const port = 5000;
 
-app.use(express.json());
-app.use('/', personagemRoutes);
+app.use(express.static('public'));
 
-app.listen(PORT, () => {
-  console.log(`http://localhost:${PORT}`);
+app.get('/', (req, res) => {
+  res.status(200).send('')
+});
+
+app.listen(port, () => {
+  console.log(`http://localhost:${port}`);
 });
