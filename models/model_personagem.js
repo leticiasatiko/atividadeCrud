@@ -8,7 +8,7 @@ class Personagem {
       this.itensMagicos = [];
   
       const total = forca + defesa;
-      if (total > 10) throw new Error("Você só pode distribuir 10 pontos entre força e defesa.");
+      if (total > 10) throw new Error("Número de pontos máximo atingido! (10 pontos)");
   
       this.forca = forca;
       this.defesa = defesa;
