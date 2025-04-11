@@ -1,13 +1,20 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const personagemRoutes = require('./routes/personagemRoute');
+const itemRoutes = require('./routes/itemRoute');
+
 const app = express();
-const port = 5000;
+app.use(express.json());
 
-app.use(express.static('public'));
+const swaggerDocument = YAML.load('./swagger/swagger.yaml');
 
-app.get('/', (req, res) => {
-  res.status(200).send('')
-});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
+app.use('/personagens', personagemRoutes);
+app.use('/itens', itemRoutes);
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
