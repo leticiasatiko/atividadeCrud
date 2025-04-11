@@ -1,9 +1,12 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+import personagemRoutes from './routes/routes_personagem.js';
 
 const app = express();
-const PORT = 5000
+const PORT = 5000;
 
-app.use(bodyParser.json());
+app.use(express.json());
+app.use('/', personagemRoutes);
 
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`http://localhost:${PORT}`);
+});

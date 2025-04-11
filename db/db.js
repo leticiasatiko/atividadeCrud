@@ -1,7 +1,4 @@
 const personagens = [];
 const item = [];
 
-module.exports = {
-    personagens,
-    item,
-};
+export { personagens, item };

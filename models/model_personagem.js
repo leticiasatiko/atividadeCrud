@@ -27,5 +27,5 @@ class Personagem {
     }
   }
   
-  module.exports = Personagem;
-  
+
+  export default Personagem;
