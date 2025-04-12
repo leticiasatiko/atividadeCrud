@@ -14,13 +14,11 @@
 ## 📁 Endpoints
 ### 🔹 Personagens
 #### ➕ Criar Personagem
-POST /personagens
-
-Cria um novo personagem.
+POST /personagens - Cria um novo personagem.
 
 {
   "nome": "Fulano",
-  "nomeAventureiro": "Fulano, o Bravo",
+  "nomeAventureiro": "Fulaninho",
   "classe": "Guerreiro",
   "level": 1,
   "forca": 6,
@@ -28,49 +26,37 @@ Cria um novo personagem.
 }
 
 #### 📃 Listar Personagens
-GET /personagens
-Retorna todos os personagens.
+GET /personagens - Retorna todos os personagens.
 
 #### 🔍 Buscar Personagem por ID
-GET /personagens/:id
-Exibe os dados de um personagem específico.
+GET /personagens/:id - Exibe os dados de um personagem específico.
 
 #### ❌ Remover Personagem
-DELETE /personagens/:id
-Remove um personagem pelo ID.
+DELETE /personagens/:id - Remove um personagem pelo ID.
 
 #### 🪄 Atribuir Item Mágico
-POST /personagens/:id/atribuir-item/:itemId
-Atribui um item mágico ao personagem.
-
-Regra importante:
-Se o item for um Amuleto, o personagem só poderá ter esse item. Nenhum outro item pode ser atribuído.
+POST /personagens/:id/atribuir-item/:itemId - Atribui um item mágico ao personagem.
 
 ### 🔹 Itens Mágicos
 #### ➕ Criar Item Mágico
-POST /itens
-Cria um novo item mágico.
+POST /itens - Cria um novo item mágico.
+
 {
   "nome": "Espada Flamejante",
   "tipo": "Arma",
   "forca": 7,
   "defesa": 0
 }
-Tipos permitidos: "Arma", "Armadura", "Amuleto"
 
 #### 📃 Listar Itens
-GET /itens
-Retorna todos os itens mágicos.
+GET /itens - Retorna todos os itens mágicos.
 
 #### 🔢 Total de Itens
-GET /itens/total
-Retorna a quantidade total de itens mágicos cadastrados.
+GET /itens/total - Retorna a quantidade total de itens mágicos cadastrados.
 
 #### 🔍 Buscar Item por ID
-GET /itens/:id
-Exibe um item mágico específico.
+GET /itens/:id - Exibe um item mágico específico.
 
-❌ Remover Item
-DELETE /itens/:id
-Remove um item mágico pelo ID.
+#### ❌ Remover Item
+DELETE /itens/:id - Remove um item mágico pelo ID.
 
