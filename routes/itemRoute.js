@@ -1,40 +1,49 @@
 const express = require('express');
 const router = express.Router();
 const {
-  adicionarItem,
-  listarItens,
-  buscarItemPorId,
-  removerItem,
-  listarItensPorPersonagem,
-  buscarAmuletoPorPersonagem,
+  criarItemMagico,
+  listarItensMagicos,
+  listarTotalItensMagicos,
+  buscarItemMagicoPorId,
+  removerItemMagico
 } = require('../models/itemModel');
 
+// Cadastrar Item Mágico
 router.post('/', (req, res) => {
   try {
-    const novoItem = adicionarItem(req.body);
-    res.status(201).json(novoItem);
+    const item = criarItemMagico(req.body);
+    res.status(201).json(item);
   } catch (err) {
     res.status(400).json({ erro: err.message });
   }
 });
 
+// Listar Itens Mágicos
 router.get('/', (req, res) => {
-  res.json(listarItens());
+  res.json(listarItensMagicos());
 });
 
+// Listar Total de Itens Mágicos
+router.get('/total', (req, res) => {
+  const total = listarTotalItensMagicos();
+  res.json({ total });
+});
+
+// Buscar Item Mágico por ID
 router.get('/:id', (req, res) => {
-  try {
-    const item = buscarItemPorId(req.params.id);
+  const item = buscarItemMagicoPorId(req.params.id);
+  if (item) {
     res.json(item);
-  } catch (err) {
-    res.status(404).json({ erro: err.message });
+  } else {
+    res.status(404).json({ erro: 'Item não encontrado.' });
   }
 });
 
+// Remover Item Mágico
 router.delete('/:id', (req, res) => {
   try {
-    const itemRemovido = removerItem(req.params.id);
-    res.json(itemRemovido);
+    removerItemMagico(req.params.id);
+    res.json({ mensagem: 'Item removido com sucesso.' });
   } catch (err) {
     res.status(404).json({ erro: err.message });
   }

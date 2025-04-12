@@ -1,12 +1,127 @@
+openapi: 3.0.0
+info:
+  title: API de Gerenciamento de Personagens e Itens Mágicos
+  description: >
+    API para gerenciar Personagens e Itens Mágicos num jogo de RPG.  
+    Cada Personagem tem 10 pontos para distribuir entre Força e Defesa na criação,  
+    e seus atributos (Força e Defesa) exibidos consideram os itens mágicos vinculados.  
+    Existem regras específicas para os tipos de itens:  
+    - Arma: Defesa obrigatoriamente 0.  
+    - Armadura: Força obrigatoriamente 0.  
+    - Amuleto: Pode ter Força e Defesa, mas o Personagem pode possuir apenas 1.
+  version: "1.0.0"
 paths:
-  /itens:
+  /personagens:
+    post:
+      summary: Cadastrar Personagem
+      description: >
+        Cria um novo personagem com Nome, Nome Aventureiro, Classe, Level, e pontos iniciais (Força e Defesa) que somem no máximo 10.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                nomeAventureiro:
+                  type: string
+                classe:
+                  type: string
+                  description: Deve ser um dos seguintes: Guerreiro, Mago, Arqueiro, Ladino ou Bardo.
+                level:
+                  type: integer
+                forca:
+                  type: integer
+                  description: Pontos de força (soma com defesa não pode ultrapassar 10).
+                defesa:
+                  type: integer
+                  description: Pontos de defesa (soma com força não pode ultrapassar 10).
+      responses:
+        '201':
+          description: Personagem criado com sucesso
     get:
-      summary: Lista todos os itens mágicos
+      summary: Listar Personagens
+      description: Retorna a lista de todos os personagens, com os atributos de Força e Defesa somados com os itens mágicos.
       responses:
         '200':
-          description: Lista de itens mágicos
+          description: Lista de personagens
+  /personagens/total:
+    get:
+      summary: Listar Personagens Totais
+      responses:
+        '200':
+          description: Retorna o total de personagens cadastrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+  /personagens/{id}:
+    get:
+      summary: Buscar Personagem por Identificador
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do personagem
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Personagem encontrado
+        '404':
+          description: Personagem não encontrado
+    put:
+      summary: Atualizar Nome de Guerreiro por Identificador
+      description: Atualiza o atributo "nome" do personagem (caso seja Guerreiro, por exemplo).
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do personagem
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+      responses:
+        '200':
+          description: Nome atualizado com sucesso
+        '404':
+          description: Personagem não encontrado
+    delete:
+      summary: Remover Personagem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do personagem
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Personagem removido com sucesso
+        '404':
+          description: Personagem não encontrado
+  /itens:
     post:
-      summary: Cria um novo item mágico
+      summary: Cadastrar Item Mágico
+      description: >
+        Cria um novo item mágico. Regras:  
+        - Tipo: Arma, Armadura ou Amuleto  
+        - Se Arma, a Defesa deve ser 0.  
+        - Se Armadura, a Força deve ser 0.  
+        - Se Amuleto, poderá ter Força e Defesa, mas o personagem pode ter somente 1.
       requestBody:
         required: true
         content:
@@ -22,15 +137,30 @@ paths:
                   type: integer
                 defesa:
                   type: integer
-                personagemId:
-                  type: string
       responses:
         '201':
-          description: Item criado com sucesso
-          
+          description: Item mágico criado com sucesso
+    get:
+      summary: Listar Itens Mágicos
+      responses:
+        '200':
+          description: Lista de itens mágicos
+  /itens/total:
+    get:
+      summary: Listar Itens Mágicos Totais
+      responses:
+        '200':
+          description: Retorna o total de itens mágicos cadastrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
   /itens/{id}:
     get:
-      summary: Buscar um item mágico por identificador
+      summary: Buscar Item Mágico por Identificador
       parameters:
         - in: path
           name: id
@@ -44,7 +174,7 @@ paths:
         '404':
           description: Item não encontrado
     delete:
-      summary: Remover um item mágico
+      summary: Remover Item Mágico do Sistema
       parameters:
         - in: path
           name: id
@@ -54,13 +184,40 @@ paths:
             type: string
       responses:
         '200':
-          description: Item removido
+          description: Item removido com sucesso
         '404':
           description: Item não encontrado
-
-  /itens/personagem/{id}:
+  /personagens/{id}/itens:
+    post:
+      summary: Adicionar Item Mágico ao Personagem
+      description: >
+        Adiciona um item mágico a um personagem.  
+        Regras adicionais:  
+        - O personagem só pode ter 1 Amuleto  
+        - Ao adicionar o item, os atributos do personagem (Força e Defesa) serão recalculados.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID do personagem
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                itemId:
+                  type: string
+      responses:
+        '200':
+          description: Item adicionado ao personagem
+        '400':
+          description: Erro na adição do item (ex.: excesso de amuleto ou restrições de tipo)
     get:
-      summary: Lista todos os itens mágicos de um personagem
+      summary: Listar Itens Mágicos por Personagem
       parameters:
         - in: path
           name: id
@@ -72,11 +229,10 @@ paths:
         '200':
           description: Lista de itens mágicos do personagem
         '404':
-          description: Personagem não encontrado
-
-  /itens/personagem/{id}/amuleto:
+          description: Personagem não encontrado ou sem itens
+  /personagens/{id}/itens/amuleto:
     get:
-      summary: Buscar o amuleto de um personagem
+      summary: Buscar Amuleto do Personagem
       parameters:
         - in: path
           name: id
@@ -88,4 +244,4 @@ paths:
         '200':
           description: Amuleto encontrado
         '404':
-          description: Amuleto não encontrado
+          description: Amuleto não encontrado ou o personagem não possui items

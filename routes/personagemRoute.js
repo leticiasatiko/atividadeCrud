@@ -1,113 +1,109 @@
-const { v4: uuidv4 } = require('uuid');
-
-// Banco de dados em memória
-const personagens = [];
-const itens = [];
-
-const CLASSES_VALIDAS = ['Guerreiro', 'Mago', 'Arqueiro', 'Ladino', 'Bardo'];
-const TIPOS_VALIDOS = ['Amuleto', 'Arma', 'Armadura'];
-
-// Função para criar personagem
-function criarPersonagem(data) {
-  const { nome, nomeAventureiro, classe, level, forca, defesa } = data;
-
-  if (forca + defesa !== 10) {
-    throw new Error('A soma de força e defesa deve ser exatamente 10');
-  }
-
-  if (!CLASSES_VALIDAS.includes(classe)) {
-    throw new Error('Classe inválida');
-  }
-
-  const novoPersonagem = {
-    id: uuidv4(),
-    nome,
-    nomeAventureiro,
-    classe,
-    level,
-    forca,
-    defesa,
-    itens: []  // Inicializa a lista de itens do personagem
-  };
-
-  personagens.push(novoPersonagem);
-  return novoPersonagem;
-}
-
-// Função para listar todos os personagens com a soma de atributos de itens
-function listarPersonagens() {
-  return personagens.map(personagem => {
-    const atributosExtras = personagem.itens.reduce((acc, item) => {
-      acc.forca += item.forca || 0;
-      acc.defesa += item.defesa || 0;
-      return acc;
-    }, { forca: 0, defesa: 0 });
-
-    return {
-      ...personagem,
-      forcaTotal: personagem.forca + atributosExtras.forca,
-      defesaTotal: personagem.defesa + atributosExtras.defesa,
-    };
-  });
-}
-
-// Função para buscar personagem por ID
-function buscarPorId(id) {
-  return personagens.find(p => p.id === id);
-}
-
-// Função para adicionar item ao personagem
-function adicionarItemAoPersonagem(personagemId, itemData) {
-  const personagem = buscarPorId(personagemId);
-  if (!personagem) {
-    throw new Error('Personagem não encontrado');
-  }
-
-  if (!TIPOS_VALIDOS.includes(itemData.tipo)) {
-    throw new Error('Tipo de item inválido');
-  }
-
-  // Garantir que as armas não tenham defesa
-  if (itemData.tipo === 'Arma') {
-    itemData.defesa = 0; 
-  }
-
-  // Verificar se o personagem já tem um amuleto
-  if (itemData.tipo === 'Amuleto') {
-    const jaTemAmuleto = personagem.itens.some(i => i.tipo === 'Amuleto');
-    if (jaTemAmuleto) {
-      throw new Error('O personagem já possui um amuleto');
-    }
-  }
-
-  // Criando o novo item
-  const novoItem = {
-    id: uuidv4(),
-    nome: itemData.nome,
-    tipo: itemData.tipo,
-    forca: itemData.forca || 0,
-    defesa: itemData.defesa || 0
-  };
-
-  personagem.itens.push(novoItem);
-  return novoItem;
-}
-
-// Função para listar itens
-function listarItens() {
-  return itens;
-}
-
-// Função para buscar item por ID
-function buscarItemPorId(id) {
-  return itens.find(item => item.id === id);
-}
-
-module.exports = {
-  personagens,
+const express = require('express');
+const router = express.Router();
+const {
   criarPersonagem,
   listarPersonagens,
-  adicionarItemAoPersonagem,
-  listarItens,
-  buscarItemPorId
-};
+  buscarPersonagemPorId,
+  atualizarNomePersonagem,
+  removerPersonagem,
+  adicionarItemAoPersonagem
+} = require('../models/personagemModel');
+const { buscarItemMagicoPorId } = require('../models/itemModel');
+
+// Cadastrar Personagem
+router.post('/', (req, res) => {
+  try {
+    const personagem = criarPersonagem(req.body);
+    res.status(201).json(personagem);
+  } catch (err) {
+    res.status(400).json({ erro: err.message });
+  }
+});
+
+// Listar Personagens (com atributos recalculados)
+router.get('/', (req, res) => {
+  res.json(listarPersonagens());
+});
+
+// Listar total de Personagens
+router.get('/total', (req, res) => {
+  const total = listarPersonagens().length;
+  res.json({ total });
+});
+
+// Buscar Personagem por ID
+router.get('/:id', (req, res) => {
+  const personagem = buscarPersonagemPorId(req.params.id);
+  if (personagem) {
+    // Ao buscar, calcular os atributos finais também:
+    const somaForcaItens = personagem.itens.reduce((acc, i) => acc + i.forca, 0);
+    const somaDefesaItens = personagem.itens.reduce((acc, i) => acc + i.defesa, 0);
+    res.json({
+      ...personagem,
+      forca: personagem.forcaBase + somaForcaItens,
+      defesa: personagem.defesaBase + somaDefesaItens
+    });
+  } else {
+    res.status(404).json({ erro: 'Personagem não encontrado.' });
+  }
+});
+
+// Atualizar Nome de Guerreiro (ou outro) por ID
+router.put('/:id', (req, res) => {
+  try {
+    const personagem = atualizarNomePersonagem(req.params.id, req.body.nome);
+    res.json(personagem);
+  } catch (err) {
+    res.status(404).json({ erro: err.message });
+  }
+});
+
+// Remover Personagem
+router.delete('/:id', (req, res) => {
+  try {
+    removerPersonagem(req.params.id);
+    res.json({ mensagem: 'Personagem removido com sucesso.' });
+  } catch (err) {
+    res.status(404).json({ erro: err.message });
+  }
+});
+
+// Adicionar Item Mágico ao Personagem
+// Neste endpoint, espera-se um objeto com o atributo "itemId" no corpo da requisição.
+router.post('/:id/itens', (req, res) => {
+  try {
+    const { itemId } = req.body;
+    const item = buscarItemMagicoPorId(itemId);
+    if (!item) {
+      return res.status(404).json({ erro: 'Item mágico não encontrado.' });
+    }
+    const itemAdicionado = adicionarItemAoPersonagem(req.params.id, item);
+    res.json(itemAdicionado);
+  } catch (err) {
+    res.status(400).json({ erro: err.message });
+  }
+});
+
+// Listar Itens Mágicos do Personagem
+router.get('/:id/itens', (req, res) => {
+  const personagem = buscarPersonagemPorId(req.params.id);
+  if (!personagem) {
+    return res.status(404).json({ erro: 'Personagem não encontrado.' });
+  }
+  res.json(personagem.itens);
+});
+
+// Buscar Amuleto do Personagem
+router.get('/:id/itens/amuleto', (req, res) => {
+  const personagem = buscarPersonagemPorId(req.params.id);
+  if (!personagem) {
+    return res.status(404).json({ erro: 'Personagem não encontrado.' });
+  }
+  const amuleto = personagem.itens.find(item => item.tipo === 'Amuleto');
+  if (!amuleto) {
+    return res.status(404).json({ erro: 'Amuleto não encontrado.' });
+  }
+  res.json(amuleto);
+});
+
+module.exports = router;
