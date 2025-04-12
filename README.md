@@ -5,7 +5,7 @@
 #### npm install
 
 ## ▶️ Execução
-#### npm start
+#### node index.js
 
 ## 📚 Documentação Swagger
 #### http://localhost:3000/api-docs
