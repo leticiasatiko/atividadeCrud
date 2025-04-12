@@ -12,11 +12,11 @@
 
 ## 📁 Endpoints
 ### Personagem
-POST /personagens - Cria um novo personagem.
-GET /personagens - Retorna todos os personagens.
-GET /personagens/:id - Exibe os dados de um personagem específico.
-DELETE /personagens/:id - Remove um personagem pelo ID.
-POST /personagens/:id/:itemId - Atribui um item mágico ao personagem.
+- `POST /personagens` - Cria um novo personagem.
+- `GET /personagens` - Retorna todos os personagens.
+- `GET /personagens/:id` - Exibe os dados de um personagem específico.
+- `DELETE /personagens/:id` - Remove um personagem pelo ID.
+- `POST /personagens/:id/:itemId` - Atribui um item mágico ao personagem.
 
 {
   "nome": "Fulano",
@@ -28,9 +28,9 @@ POST /personagens/:id/:itemId - Atribui um item mágico ao personagem.
 }
 
 ### Item
-POST /itens - Cria um novo item mágico.
-GET /itens - Retorna todos os itens mágicos.
-GET /itens/total - Retorna a quantidade total de itens mágicos cadastrados.
+- `POST /itens` - Cria um novo item mágico.
+- `GET /itens` - Retorna todos os itens mágicos.
+- `GET /itens/total` - Retorna a quantidade total de itens mágicos cadastrados.
 
 {
   "nome": "Espada Flamejante",
