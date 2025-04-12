@@ -1,14 +1,10 @@
-📦 Instalação
-bash
-Copy
-Edit
-git clone https://github.com/seu-usuario/rpg-manager-api.git
-cd rpg-manager-api
+# Trabalho CRUD - RPG
+
+## 📦 Instalação
+git clone 
 npm install
+
 ▶️ Execução
-bash
-Copy
-Edit
 npm start
 A API será iniciada em:
 http://localhost:3000
@@ -57,10 +53,6 @@ Se o item for um Amuleto, o personagem só poderá ter esse item. Nenhum outro i
 ➕ Criar Item Mágico
 POST /itens
 Cria um novo item mágico.
-
-json
-Copy
-Edit
 {
   "nome": "Espada Flamejante",
   "tipo": "Arma",
