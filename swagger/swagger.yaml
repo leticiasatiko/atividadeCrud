@@ -1,14 +1,8 @@
 openapi: 3.0.0
 info:
-  title: API de Gerenciamento de Personagens e Itens Mágicos
+  title: Trabalho CRUD - RPG 2025
   description: >
-    API para gerenciar Personagens e Itens Mágicos num jogo de RPG.  
-    Cada Personagem tem 10 pontos para distribuir entre Força e Defesa na criação,  
-    e seus atributos (Força e Defesa) exibidos consideram os itens mágicos vinculados.  
-    Existem regras específicas para os tipos de itens:  
-    - Arma: Defesa obrigatoriamente 0.  
-    - Armadura: Força obrigatoriamente 0.  
-    - Amuleto: Pode ter Força e Defesa, mas o Personagem pode possuir apenas 1.
+    Trabalho CRUD - RPG
   version: "1.0.0"
 paths:
   /personagens:
@@ -76,8 +70,8 @@ paths:
         '404':
           description: Personagem não encontrado
     put:
-      summary: Atualizar Nome de Guerreiro por Identificador
-      description: Atualiza o atributo "nome" do personagem (caso seja Guerreiro, por exemplo).
+      summary: Atualizar Nome por Identificador
+      description: Atualiza o atributo "nome" do personagem.
       parameters:
         - in: path
           name: id
@@ -174,7 +168,7 @@ paths:
         '404':
           description: Item não encontrado
     delete:
-      summary: Remover Item Mágico do Sistema
+      summary: Remover Item Mágico
       parameters:
         - in: path
           name: id
