@@ -10,7 +10,6 @@ const {
 } = require('../models/personagemModel');
 const { buscarItemMagicoPorId } = require('../models/itemModel');
 
-// Cadastrar Personagem
 router.post('/', (req, res) => {
   try {
     const personagem = criarPersonagem(req.body);
@@ -20,22 +19,18 @@ router.post('/', (req, res) => {
   }
 });
 
-// Listar Personagens (com atributos recalculados)
 router.get('/', (req, res) => {
   res.json(listarPersonagens());
 });
 
-// Listar total de Personagens
 router.get('/total', (req, res) => {
   const total = listarPersonagens().length;
   res.json({ total });
 });
 
-// Buscar Personagem por ID
 router.get('/:id', (req, res) => {
   const personagem = buscarPersonagemPorId(req.params.id);
   if (personagem) {
-    // Ao buscar, calcular os atributos finais também:
     const somaForcaItens = personagem.itens.reduce((acc, i) => acc + i.forca, 0);
     const somaDefesaItens = personagem.itens.reduce((acc, i) => acc + i.defesa, 0);
     res.json({
@@ -48,7 +43,6 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// Atualizar Nome de Guerreiro (ou outro) por ID
 router.put('/:id', (req, res) => {
   try {
     const personagem = atualizarNomePersonagem(req.params.id, req.body.nome);
@@ -58,7 +52,6 @@ router.put('/:id', (req, res) => {
   }
 });
 
-// Remover Personagem
 router.delete('/:id', (req, res) => {
   try {
     removerPersonagem(req.params.id);
@@ -68,8 +61,6 @@ router.delete('/:id', (req, res) => {
   }
 });
 
-// Adicionar Item Mágico ao Personagem
-// Neste endpoint, espera-se um objeto com o atributo "itemId" no corpo da requisição.
 router.post('/:id/itens', (req, res) => {
   try {
     const { itemId } = req.body;
@@ -84,7 +75,6 @@ router.post('/:id/itens', (req, res) => {
   }
 });
 
-// Listar Itens Mágicos do Personagem
 router.get('/:id/itens', (req, res) => {
   const personagem = buscarPersonagemPorId(req.params.id);
   if (!personagem) {
@@ -93,7 +83,6 @@ router.get('/:id/itens', (req, res) => {
   res.json(personagem.itens);
 });
 
-// Buscar Amuleto do Personagem
 router.get('/:id/itens/amuleto', (req, res) => {
   const personagem = buscarPersonagemPorId(req.params.id);
   if (!personagem) {

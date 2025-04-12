@@ -1,16 +1,13 @@
 const { v4: uuidv4 } = require('uuid');
 
-// Lista de classes permitidas
-const CLASSES_PERMITIDAS = ['Guerreiro', 'Mago', 'Arqueiro', 'Ladino', 'Bardo'];
+const classesPermitidas = ['Guerreiro', 'Mago', 'Arqueiro', 'Ladino', 'Bardo'];
 
 let personagens = [];
 
 function criarPersonagem(data) {
-  // Valida a classe
-  if (!CLASSES_PERMITIDAS.includes(data.classe)) {
+  if (!classesPermitidas.includes(data.classe)) {
     throw new Error('Classe inválida! As classes permitidas são: Guerreiro, Mago, Arqueiro, Ladino e Bardo.');
   }
-  // Valida a distribuição de pontos: soma de forca e defesa deve ser <= 10 (pode ser igual ou menor que 10)
   if ((data.forca || 0) + (data.defesa || 0) > 10) {
     throw new Error('A soma de Força e Defesa não pode ultrapassar 10 pontos.');
   }
@@ -29,7 +26,6 @@ function criarPersonagem(data) {
 }
 
 function listarPersonagens() {
-  // Ao listar, atualizamos os atributos somando os valores dos itens
   return personagens.map(p => {
     const somaForcaItens = p.itens.reduce((acc, item) => acc + item.forca, 0);
     const somaDefesaItens = p.itens.reduce((acc, item) => acc + item.defesa, 0);
@@ -63,21 +59,27 @@ function removerPersonagem(id) {
 }
 
 function adicionarItemAoPersonagem(personagemId, item) {
-  const personagem = buscarPersonagemPorId(personagemId);
-  if (!personagem) {
-    throw new Error('Personagem não encontrado.');
-  }
-  // Regra: Personagem só pode possuir 1 Amuleto
-  if (item.tipo === 'Amuleto') {
-    const jaPossuiAmuleto = personagem.itens.some(i => i.tipo === 'Amuleto');
-    if (jaPossuiAmuleto) {
-      throw new Error('Personagem já possui um Amuleto.');
+    const personagem = buscarPersonagemPorId(personagemId);
+    if (!personagem) {
+      throw new Error('Personagem não encontrado.');
     }
+  
+    const itens = personagem.itens;
+  
+    if (item.tipo === 'Amuleto') {
+      if (itens.length > 0) {
+        throw new Error('Personagem já possui itens. Não pode receber um Amuleto.');
+      }
+    } else {
+      const possuiAmuleto = itens.some(i => i.tipo === 'Amuleto');
+      if (possuiAmuleto) {
+        throw new Error('Personagem já possui um Amuleto e não pode receber outros itens.');
+      }
+    }
+  
+    itens.push(item);
+    return item;
   }
-  // Adiciona o item na lista do personagem
-  personagem.itens.push(item);
-  return item;
-}
 
 module.exports = {
   criarPersonagem,

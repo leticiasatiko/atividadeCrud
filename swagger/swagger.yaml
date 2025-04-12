@@ -230,18 +230,3 @@ paths:
           description: Lista de itens mágicos do personagem
         '404':
           description: Personagem não encontrado ou sem itens
-  /personagens/{id}/itens/amuleto:
-    get:
-      summary: Buscar Amuleto do Personagem
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID do personagem
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Amuleto encontrado
-        '404':
-          description: Amuleto não encontrado ou o personagem não possui items

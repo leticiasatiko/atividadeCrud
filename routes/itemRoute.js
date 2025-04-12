@@ -8,7 +8,6 @@ const {
   removerItemMagico
 } = require('../models/itemModel');
 
-// Cadastrar Item Mágico
 router.post('/', (req, res) => {
   try {
     const item = criarItemMagico(req.body);
@@ -18,18 +17,15 @@ router.post('/', (req, res) => {
   }
 });
 
-// Listar Itens Mágicos
 router.get('/', (req, res) => {
   res.json(listarItensMagicos());
 });
 
-// Listar Total de Itens Mágicos
 router.get('/total', (req, res) => {
   const total = listarTotalItensMagicos();
   res.json({ total });
 });
 
-// Buscar Item Mágico por ID
 router.get('/:id', (req, res) => {
   const item = buscarItemMagicoPorId(req.params.id);
   if (item) {
@@ -39,7 +35,6 @@ router.get('/:id', (req, res) => {
   }
 });
 
-// Remover Item Mágico
 router.delete('/:id', (req, res) => {
   try {
     removerItemMagico(req.params.id);
