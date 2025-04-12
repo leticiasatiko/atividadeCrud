@@ -1,8 +1,8 @@
 # Trabalho CRUD - RPG
 
 ## 📦 Instalação
-git clone 
-npm install
+#### git clone 
+#### npm install
 
 ▶️ Execução
 npm start
