@@ -3,16 +3,20 @@ const { v4: uuidv4 } = require('uuid');
 const personagens = [];
 
 const CLASSES_VALIDAS = ['Guerreiro', 'Mago', 'Arqueiro', 'Ladino', 'Bardo'];
+const TIPOS_VALIDOS = ['Amuleto', 'Arma', 'Armadura'];
 
-function criarPersonagem(data) {
-  const { nome, nomeAventureiro, classe, level, forca, defesa } = data;
-
-  if (forca + defesa !== 10) {
-    throw new Error('A soma de força e defesa deve ser exatamente 10');
+function criarPersonagem({ nome, nomeAventureiro, classe, level, forca, defesa, itensMagicos = [] }) {
+  if (!CLASSES_VALIDAS.includes(classe)) {
+    throw new Error('Classe inválida.');
   }
 
-  if (!CLASSES_VALIDAS.includes(classe)) {
-    throw new Error('Classe inválida');
+  if ((forca + defesa) > 10) {
+    throw new Error('A soma de Força e Defesa deve ser no máximo 10.');
+  }
+
+  const amuletos = itensMagicos.filter(item => item.tipo === 'Amuleto');
+  if (amuletos.length > 1) {
+    throw new Error('O personagem só pode ter 1 amuleto.');
   }
 
   const novoPersonagem = {
@@ -21,9 +25,9 @@ function criarPersonagem(data) {
     nomeAventureiro,
     classe,
     level,
-    itens: [],
     forca,
     defesa,
+    itensMagicos,
   };
 
   personagens.push(novoPersonagem);
@@ -31,19 +35,42 @@ function criarPersonagem(data) {
 }
 
 function listarPersonagens() {
-  return personagens.map(personagem => {
-    const atributosExtras = personagem.itens.reduce((acc, item) => {
-      acc.forca += item.forca || 0;
-      acc.defesa += item.defesa || 0;
-      return acc;
-    }, { forca: 0, defesa: 0 });
-
-    return {
-      ...personagem,
-      forcaTotal: personagem.forca + atributosExtras.forca,
-      defesaTotal: personagem.defesa + atributosExtras.defesa,
-    };
-  });
+  return personagens;
 }
 
-module.exports = { criarPersonagem, listarPersonagens, personagens };
+function buscarPorId(id) {
+  return personagens.find(p => p.id === id);
+}
+
+function adicionarItemAoPersonagem(personagemId, item) {
+  const personagem = buscarPorId(personagemId);
+  if (!personagem) {
+    throw new Error('Personagem não encontrado.');
+  }
+
+  if (!TIPOS_VALIDOS.includes(item.tipo)) {
+    throw new Error('Tipo de item inválido.');
+  }
+
+  if (item.tipo === 'Arma' && item.defesa !== 0) {
+    throw new Error('Itens do tipo Arma devem ter defesa igual a 0.');
+  }
+
+  if (item.tipo === 'Amuleto') {
+    const jaTemAmuleto = personagem.itensMagicos.some(i => i.tipo === 'Amuleto');
+    if (jaTemAmuleto) {
+      throw new Error('O personagem já possui um amuleto.');
+    }
+  }
+
+  const novoItem = { id: uuidv4(), ...item };
+  personagem.itensMagicos.push(novoItem);
+  return novoItem;
+}
+
+module.exports = {
+  criarPersonagem,
+  listarPersonagens,
+  buscarPorId,
+  adicionarItemAoPersonagem,
+};
