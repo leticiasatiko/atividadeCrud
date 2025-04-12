@@ -4,24 +4,22 @@
 #### git clone 
 #### npm install
 
-▶️ Execução
+## ▶️ Execução
 npm start
 A API será iniciada em:
 http://localhost:3000
 
-📚 Documentação Swagger
+## 📚 Documentação Swagger
 Acesse em:
 http://localhost:3000/api-docs
 
-📁 Endpoints
-🔹 Personagens
-➕ Criar Personagem
+## 📁 Endpoints
+### 🔹 Personagens
+#### ➕ Criar Personagem
 POST /personagens
+
 Cria um novo personagem.
 
-json
-Copy
-Edit
 {
   "nome": "Fulano",
   "nomeAventureiro": "Fulano, o Bravo",
@@ -30,27 +28,28 @@ Edit
   "forca": 6,
   "defesa": 4
 }
-📃 Listar Personagens
+
+#### 📃 Listar Personagens
 GET /personagens
 Retorna todos os personagens.
 
-🔍 Buscar Personagem por ID
+#### 🔍 Buscar Personagem por ID
 GET /personagens/:id
 Exibe os dados de um personagem específico.
 
-❌ Remover Personagem
+#### ❌ Remover Personagem
 DELETE /personagens/:id
 Remove um personagem pelo ID.
 
-🪄 Atribuir Item Mágico
+#### 🪄 Atribuir Item Mágico
 POST /personagens/:id/atribuir-item/:itemId
 Atribui um item mágico ao personagem.
 
 Regra importante:
 Se o item for um Amuleto, o personagem só poderá ter esse item. Nenhum outro item pode ser atribuído.
 
-🔹 Itens Mágicos
-➕ Criar Item Mágico
+### 🔹 Itens Mágicos
+#### ➕ Criar Item Mágico
 POST /itens
 Cria um novo item mágico.
 {
@@ -61,15 +60,15 @@ Cria um novo item mágico.
 }
 Tipos permitidos: "Arma", "Armadura", "Amuleto"
 
-📃 Listar Itens
+#### 📃 Listar Itens
 GET /itens
 Retorna todos os itens mágicos.
 
-🔢 Total de Itens
+#### 🔢 Total de Itens
 GET /itens/total
 Retorna a quantidade total de itens mágicos cadastrados.
 
-🔍 Buscar Item por ID
+#### 🔍 Buscar Item por ID
 GET /itens/:id
 Exibe um item mágico específico.
 
