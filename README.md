@@ -1,7 +1,7 @@
 # Trabalho CRUD - RPG
 
 ## 📦 Instalação
-#### git clone 
+#### git clone https://github.com/leticiasatiko/atividadeCrud.git
 #### npm install
 
 ## ▶️ Execução
@@ -11,9 +11,12 @@
 #### http://localhost:3000/api-docs
 
 ## 📁 Endpoints
-### 🔹 Personagens
-#### ➕ Criar Personagem
+### Personagem
 POST /personagens - Cria um novo personagem.
+GET /personagens - Retorna todos os personagens.
+GET /personagens/:id - Exibe os dados de um personagem específico.
+DELETE /personagens/:id - Remove um personagem pelo ID.
+POST /personagens/:id/:itemId - Atribui um item mágico ao personagem.
 
 {
   "nome": "Fulano",
@@ -24,21 +27,10 @@ POST /personagens - Cria um novo personagem.
   "defesa": 4
 }
 
-#### 📃 Listar Personagens
-GET /personagens - Retorna todos os personagens.
-
-#### 🔍 Buscar Personagem por ID
-GET /personagens/:id - Exibe os dados de um personagem específico.
-
-#### ❌ Remover Personagem
-DELETE /personagens/:id - Remove um personagem pelo ID.
-
-#### 🪄 Atribuir Item Mágico
-POST /personagens/:id/atribuir-item/:itemId - Atribui um item mágico ao personagem.
-
-### 🔹 Itens Mágicos
-#### ➕ Criar Item Mágico
+### Item
 POST /itens - Cria um novo item mágico.
+GET /itens - Retorna todos os itens mágicos.
+GET /itens/total - Retorna a quantidade total de itens mágicos cadastrados.
 
 {
   "nome": "Espada Flamejante",
@@ -47,11 +39,7 @@ POST /itens - Cria um novo item mágico.
   "defesa": 0
 }
 
-#### 📃 Listar Itens
-GET /itens - Retorna todos os itens mágicos.
 
-#### 🔢 Total de Itens
-GET /itens/total - Retorna a quantidade total de itens mágicos cadastrados.
 
 #### 🔍 Buscar Item por ID
 GET /itens/:id - Exibe um item mágico específico.
