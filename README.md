@@ -8,7 +8,7 @@
 #### node index.js
 
 ## 📚 Documentação Swagger
-#### http://localhost:3000/api-docs
+#### http://localhost:3000/api-docs/#/
 
 ## 📁 Endpoints
 ### Personagem
