@@ -5,13 +5,11 @@
 #### npm install
 
 ## ▶️ Execução
-npm start
-A API será iniciada em:
-http://localhost:3000
+#### npm start
+#### A API será iniciada em: http://localhost:3000
 
 ## 📚 Documentação Swagger
-Acesse em:
-http://localhost:3000/api-docs
+#### http://localhost:3000/api-docs
 
 ## 📁 Endpoints
 ### 🔹 Personagens
