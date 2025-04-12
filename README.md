@@ -14,9 +14,10 @@
 ### Personagem
 - `POST /personagens` - Cria um novo personagem.
 - `GET /personagens` - Retorna todos os personagens.
-- `GET /personagens/:id` - Exibe os dados de um personagem específico.
-- `DELETE /personagens/:id` - Remove um personagem pelo ID.
-- `POST /personagens/:id/:itemId` - Atribui um item mágico ao personagem.
+- `GET /personagens/{id}` - Exibe os dados de um personagem específico.
+- `PUT /personagens/{id}` - Altera o nome do personagem.
+- `DELETE /personagens/{id}` - Remove um personagem pelo ID.
+- `POST /personagens/:id/itens` - Atribui um item mágico ao personagem.
 
 {
   "nome": "Fulano",
@@ -31,6 +32,8 @@
 - `POST /itens` - Cria um novo item mágico.
 - `GET /itens` - Retorna todos os itens mágicos.
 - `GET /itens/total` - Retorna a quantidade total de itens mágicos cadastrados.
+- `GET /itens/{id}` - Exibe um item mágico específico.
+- `DELETE /itens/{id}` - Remove um item mágico pelo ID.
 
 {
   "nome": "Espada Flamejante",
@@ -41,9 +44,4 @@
 
 
 
-#### 🔍 Buscar Item por ID
-GET /itens/:id - Exibe um item mágico específico.
-
-#### ❌ Remover Item
-DELETE /itens/:id - Remove um item mágico pelo ID.
 
