@@ -6,7 +6,6 @@
 
 ## ▶️ Execução
 #### npm start
-#### A API será iniciada em: http://localhost:3000
 
 ## 📚 Documentação Swagger
 #### http://localhost:3000/api-docs
